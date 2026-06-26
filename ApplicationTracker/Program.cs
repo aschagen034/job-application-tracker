@@ -21,7 +21,7 @@ namespace ApplicationTracker
                 Console.WriteLine("\n=== Job Application Tracker ===");
                 Console.WriteLine("1. Add Application");
                 Console.WriteLine("2. View Applications");
-                Console.WriteLine("3. Update Application Status");
+                Console.WriteLine("3. Edit Application");
                 Console.WriteLine("4. Delete Application");
                 Console.WriteLine("5. Exit");
                 Console.WriteLine("Choose an option: ");
@@ -37,7 +37,7 @@ namespace ApplicationTracker
                         ViewApplications();
                         break;
                     case "3":
-                        UpdateApplicationStatus();
+                        EditApplication();
                         break;
                     case "4":
                         DeleteApplication();
@@ -110,8 +110,10 @@ namespace ApplicationTracker
             
         }
 
-        static void UpdateApplicationStatus()
+        static void EditApplication()
         {
+            applications = repository.GetAllApplications();
+
             if (applications.Count == 0)
             {
                 Console.WriteLine("No applications found.");
@@ -131,13 +133,72 @@ namespace ApplicationTracker
             }
             JobApplication app = applications[appNum - 1];
 
-            Console.WriteLine("Enter new status: ");
-            string newStatus = Console.ReadLine();
+            Console.WriteLine("What would you like to edit?");
+            Console.WriteLine("1. Company Name");
+            Console.WriteLine("2. Job Title");
+            Console.WriteLine("3. Location");
+            Console.WriteLine("4. Date Applied");
+            Console.WriteLine("5. Status");
+            Console.WriteLine("6. Notes");
+            Console.WriteLine("Choose an option: ");
 
-            repository.UpdateApplicationStatus(app.Id, newStatus);
+            string option = Console.ReadLine();
 
-            Console.WriteLine("Application status updated successfully.");
-     
+            switch (option)
+            {
+                case "1":
+                    Console.WriteLine("Enter new company name:");
+                    string newCompanyName = Console.ReadLine();
+
+                    repository.EditCompanyName(app.Id, newCompanyName);
+
+                    Console.WriteLine("Application company name updated succesfully.");
+                    break;
+                case "2":
+                    Console.WriteLine("Enter new job title: ");
+                    string newJobTitle = Console.ReadLine();
+
+                    repository.EditJobTitle(app.Id, newJobTitle);
+
+                    Console.WriteLine("Application job title updated successfully.");
+                    break;
+                case "3":
+                    Console.WriteLine("Enter new job location: ");
+                    string newLocation = Console.ReadLine();
+
+                    repository.EditJobLocation(app.Id, newLocation);
+
+                    Console.WriteLine("Application job location updated successfully.");
+                    break;
+                case "4":
+                    Console.WriteLine("Enter new date applied (yyyy-mm-dd): ");
+                    string input = Console.ReadLine();
+                    DateTime newDate = DateTime.Parse(input);
+
+                    repository.EditDateApplied(app.Id, newDate);
+
+                    Console.WriteLine("Application date applied updated successfully.");
+                    break;
+                case "5":
+                    Console.WriteLine("Enter new status: ");
+                    string newStatus = Console.ReadLine();
+
+                    repository.EditApplicationStatus(app.Id, newStatus);
+
+                    Console.WriteLine("Application status updated successfully.");
+                    break;
+                case "6":
+                    Console.WriteLine("Enter new job notes: ");
+                    string newJobNote = Console.ReadLine();
+
+                    repository.EditJobNotes(app.Id, newJobNote);
+
+                    Console.WriteLine("Application notes updated successfully.");
+                    break;
+                default:
+                    Console.WriteLine("This edit option is not available.");
+                    break;
+            }
         }
 
         static void DeleteApplication()

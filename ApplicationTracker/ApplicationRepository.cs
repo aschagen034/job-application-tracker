@@ -76,7 +76,103 @@ namespace ApplicationTracker
             }
 
         }
-        public void UpdateApplicationStatus(int id, string newStatus)
+
+        public void EditCompanyName(int id, string newCompanyName)
+        {
+            string query = @"
+            UPDATE Applications
+            SET CompanyName = @CompanyName
+            WHERE Id = @Id;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@CompanyName", newCompanyName);
+                command.Parameters.AddWithValue("@Id", id);
+
+                connection.Open();
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("No database row was updated.");
+                }
+            }
+        }
+
+        public void EditJobTitle(int id, string newJobTitle)
+        {
+            string query = @"
+            UPDATE Applications
+            SET JobTitle = @JobTitle
+            WHERE Id = @Id;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@JobTitle", newJobTitle);
+                command.Parameters.AddWithValue("@Id", id);
+
+                connection.Open();
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("No database row was updated.");
+                }
+            }
+        }
+
+        public void EditJobLocation(int id, string newJobLocation)
+        {
+            string query = @"
+            UPDATE Applications
+            SET JobLocation = @JobLocation
+            WHERE Id = @Id;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@JobLocation", newJobLocation);
+                command.Parameters.AddWithValue("@Id", id);
+
+                connection.Open();
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("No database row was updated.");
+                }
+            }
+        }
+
+        public void EditDateApplied(int id, DateTime newDateApplied)
+        {
+            string query = @"
+            UPDATE Applications
+            SET DateApplied = @DateApplied
+            WHERE Id = @Id;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@DateApplied", newDateApplied);
+                command.Parameters.AddWithValue("@Id", id);
+
+                connection.Open();
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("No database row was updated.");
+                }
+            }
+        }
+        public void EditApplicationStatus(int id, string newStatus)
         {
             string query = @"
             UPDATE Applications
@@ -87,6 +183,30 @@ namespace ApplicationTracker
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@JobStatus", newStatus);
+                command.Parameters.AddWithValue("@Id", id);
+
+                connection.Open();
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("No database row was updated.");
+                }
+            }
+        }
+
+        public void EditJobNotes(int id, string newJobNote)
+        {
+            string query = @"
+            UPDATE Applications
+            SET Notes = @Notes
+            WHERE Id = @Id;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Notes", newJobNote);
                 command.Parameters.AddWithValue("@Id", id);
 
                 connection.Open();
