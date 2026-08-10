@@ -55,7 +55,6 @@ namespace ApplicationTracker
 
         static void AddApplication()
         {
-
             JobApplication app = new JobApplication();
 
             Console.Write("Company Name: ");
@@ -79,48 +78,26 @@ namespace ApplicationTracker
             repository.AddApplication(app);
 
             Console.WriteLine("Application added successfully");
-
-
         }
 
         static void ViewApplications()
         {
-            applications = repository.GetAllApplications();
-
-            if (applications.Count == 0)
+            if (!LoadApplications())
             {
-                Console.WriteLine("No applications found.");
                 return;
             }
 
-            for (int i = 0; i < applications.Count; i++)
-            {
-                JobApplication app = applications[i];
-
-                Console.WriteLine("\n-----------------------------");
-                Console.WriteLine($"{i + 1})");
-                Console.WriteLine($"Company: {app.CompanyName}");
-                Console.WriteLine($"Title: {app.JobTitle}");
-                Console.WriteLine($"Location: {app.JobLocation}");
-                Console.WriteLine($"Date Applied: {app.DateApplied.ToShortDateString()}");
-                Console.WriteLine($"Job Status: {app.JobStatus}");
-                Console.WriteLine($"Notes: {app.Notes}");
-            }
-
-            
+            DisplayApplications();
         }
 
         static void EditApplication()
         {
-            applications = repository.GetAllApplications();
-
-            if (applications.Count == 0)
+            if (!LoadApplications())
             {
-                Console.WriteLine("No applications found.");
                 return;
             }
 
-            ViewApplications();
+            DisplayApplications();
 
             Console.WriteLine("Please select application to update: ");
             string num = Console.ReadLine();
@@ -203,13 +180,12 @@ namespace ApplicationTracker
 
         static void DeleteApplication()
         {
-            if (applications.Count == 0)
+            if (!LoadApplications())
             {
-                Console.WriteLine("No applications found.");
                 return;
             }
 
-            ViewApplications();
+            DisplayApplications();
 
             Console.WriteLine("Please select application to delete: ");
             string num = Console.ReadLine();
@@ -225,8 +201,36 @@ namespace ApplicationTracker
             repository.DeleteApplication(app.Id);
 
             Console.WriteLine("Application successfully removed.");
+        }
 
-            
+        static void DisplayApplications()
+        {
+            for (int i = 0; i < applications.Count; i++)
+            {
+                JobApplication app = applications[i];
+
+                Console.WriteLine("\n-----------------------------");
+                Console.WriteLine($"{i + 1})");
+                Console.WriteLine($"Company: {app.CompanyName}");
+                Console.WriteLine($"Title: {app.JobTitle}");
+                Console.WriteLine($"Location: {app.JobLocation}");
+                Console.WriteLine($"Date Applied: {app.DateApplied.ToShortDateString()}");
+                Console.WriteLine($"Job Status: {app.JobStatus}");
+                Console.WriteLine($"Notes: {app.Notes}");
+            }
+        }
+
+        static bool LoadApplications()
+        {
+            applications = repository.GetAllApplications();
+
+            if (applications.Count == 0)
+            {
+                Console.WriteLine("No applications found.");
+                return false;
+            }
+
+            return true;
         }
     }
 }
