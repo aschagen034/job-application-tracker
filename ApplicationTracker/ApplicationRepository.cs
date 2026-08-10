@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 
 namespace ApplicationTracker
 {
+    // Handles all SQL Server database operation for job applications.
     public class ApplicationRepository
     {
         private string connectionString;
@@ -17,6 +18,7 @@ namespace ApplicationTracker
             this.connectionString = connectionString;
         }
 
+        // Gets all job applications from the database.
         public List<JobApplication> GetAllApplications()
         {
             List<JobApplication> applications = new List<JobApplication>();
@@ -52,6 +54,7 @@ namespace ApplicationTracker
                 return applications;
         }
 
+        // Adds a new application to the database.
         public void AddApplication(JobApplication app)
         {
             string query = @"
@@ -77,6 +80,7 @@ namespace ApplicationTracker
 
         }
 
+        // Updates the company name for a specific job application.
         public void EditCompanyName(int id, string newCompanyName)
         {
             string query = @"
@@ -101,6 +105,7 @@ namespace ApplicationTracker
             }
         }
 
+        // Updates the job title for the specified application.
         public void EditJobTitle(int id, string newJobTitle)
         {
             string query = @"
@@ -125,6 +130,7 @@ namespace ApplicationTracker
             }
         }
 
+        // Updates the job location for a specific job application.
         public void EditJobLocation(int id, string newJobLocation)
         {
             string query = @"
@@ -149,6 +155,7 @@ namespace ApplicationTracker
             }
         }
 
+        //  Updates the date applied for a specific job application.
         public void EditDateApplied(int id, DateTime newDateApplied)
         {
             string query = @"
@@ -172,6 +179,8 @@ namespace ApplicationTracker
                 }
             }
         }
+
+        // Updates the status for a specific job application.
         public void EditApplicationStatus(int id, string newStatus)
         {
             string query = @"
@@ -196,6 +205,7 @@ namespace ApplicationTracker
             }
         }
 
+        // Updates the notes for a specific job application.
         public void EditJobNotes(int id, string newJobNote)
         {
             string query = @"
@@ -220,6 +230,7 @@ namespace ApplicationTracker
             }
         }
 
+        // Deletes a specific job application from the database using its Id.
         public void DeleteApplication(int id)
         {
             string query = @"

@@ -1,14 +1,16 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
+﻿
 namespace ApplicationTracker
 {
     internal class Program
     {
+        // Stores the applications currently loaded from the database.
         static List<JobApplication> applications = new List<JobApplication>();
 
+        // Connection string used to connect to the JobTracker SQL Server Database.
         static string connectionString =
             "Server=ORION\\SQLEXPRESS;Database=JobTracker;Integrated Security=true;TrustServerCertificate=true;";
 
+        // Repository handles all database operations for job applications
         static ApplicationRepository repository =
             new ApplicationRepository(connectionString);
 
@@ -52,7 +54,8 @@ namespace ApplicationTracker
             }
        
         }
-
+        // Collects application information from the user
+        // Saves the new application to the database
         static void AddApplication()
         {
             JobApplication app = new JobApplication();
@@ -89,13 +92,16 @@ namespace ApplicationTracker
             Console.Write("Notes: ");
             app.Notes = Console.ReadLine();
 
+            //Send the completed application to the repository to be inserted into SQL.
             repository.AddApplication(app);
 
             Console.WriteLine("Application added successfully");
         }
 
+        // Loads and displays all applications stored in the database.
         static void ViewApplications()
         {
+            // Stop if there are no applications to display.
             if (!LoadApplications())
             {
                 return;
@@ -104,6 +110,7 @@ namespace ApplicationTracker
             DisplayApplications();
         }
 
+        // Allows the user to select an application and edit a selected field.
         static void EditApplication()
         {
             if (!LoadApplications())
@@ -116,6 +123,7 @@ namespace ApplicationTracker
             Console.Write("Please select application to update: ");
             string num = Console.ReadLine();
             
+            // Checks to see if user enter a valid application number.
             if (!int.TryParse(num, out int appNum) || appNum < 1 || appNum > applications.Count)
             {
                 Console.WriteLine("Invalid application number.");
@@ -135,6 +143,7 @@ namespace ApplicationTracker
 
             string option = Console.ReadLine();
 
+            // Update only the field selected by the user.
             switch (option)
             {
                 case "1":
@@ -145,6 +154,7 @@ namespace ApplicationTracker
 
                     Console.WriteLine("Application company name updated succesfully.");
                     break;
+
                 case "2":
                     Console.Write("Enter new job title: ");
                     string newJobTitle = Console.ReadLine();
@@ -153,6 +163,7 @@ namespace ApplicationTracker
 
                     Console.WriteLine("Application job title updated successfully.");
                     break;
+
                 case "3":
                     Console.Write("Enter new job location: ");
                     string newLocation = Console.ReadLine();
@@ -161,9 +172,10 @@ namespace ApplicationTracker
 
                     Console.WriteLine("Application job location updated successfully.");
                     break;
+
                 case "4":
                     DateTime newDate;
-
+                    // Loop until user enters a valid date
                     while (true)
                     {
 
@@ -182,6 +194,7 @@ namespace ApplicationTracker
 
                     Console.WriteLine("Application date applied updated successfully.");
                     break;
+
                 case "5":
                     Console.Write("Enter new status: ");
                     string newStatus = Console.ReadLine();
@@ -190,6 +203,7 @@ namespace ApplicationTracker
 
                     Console.WriteLine("Application status updated successfully.");
                     break;
+
                 case "6":
                     Console.Write("Enter new job notes: ");
                     string newJobNote = Console.ReadLine();
@@ -198,12 +212,14 @@ namespace ApplicationTracker
 
                     Console.WriteLine("Application notes updated successfully.");
                     break;
+
                 default:
                     Console.WriteLine("This edit option is not available.");
                     break;
             }
         }
 
+        // Allows the user to select an application and remove it from the database.
         static void DeleteApplication()
         {
             if (!LoadApplications())
@@ -217,19 +233,20 @@ namespace ApplicationTracker
             Console.WriteLine();
             string num = Console.ReadLine();
             
-
+            // Validate that the selected number exists in the displayed list.
             if (!int.TryParse(num, out int appNum) || appNum < 1 || appNum > applications.Count)
             {
                 Console.WriteLine("Invalid application number.");
                 return;
             }
-
             JobApplication app = applications[appNum - 1];
+            // Delete application from the database.
             repository.DeleteApplication(app.Id);
 
             Console.WriteLine("Application successfully removed.");
         }
 
+        // Prints all currently loaded applications in an easy-to-read format
         static void DisplayApplications()
         {
             for (int i = 0; i < applications.Count; i++)
@@ -247,6 +264,7 @@ namespace ApplicationTracker
             }
         }
 
+        // Loads the latest applications from the database and returns false if none exist.
         static bool LoadApplications()
         {
             applications = repository.GetAllApplications();

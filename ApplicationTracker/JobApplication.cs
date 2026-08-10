@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationTracker
 {
+    // Represents one job application record in the tracker.
     public class JobApplication
     {
         public int Id { get; set; }
