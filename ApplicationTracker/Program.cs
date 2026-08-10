@@ -24,7 +24,7 @@ namespace ApplicationTracker
                 Console.WriteLine("3. Edit Application");
                 Console.WriteLine("4. Delete Application");
                 Console.WriteLine("5. Exit");
-                Console.WriteLine("Choose an option: ");
+                Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
 
@@ -66,8 +66,22 @@ namespace ApplicationTracker
             Console.Write("Job Location: ");
             app.JobLocation = Console.ReadLine();
 
-            Console.Write("Date Applied (yyyy-mm-dd): ");
-            app.DateApplied = DateTime.Parse(Console.ReadLine());
+            DateTime dateApplied;
+
+            while (true)
+            {
+                Console.Write("Date Applied (yyyy-mm-dd): ");
+                string dateInput = Console.ReadLine();
+
+                if (DateTime.TryParse(dateInput, out dateApplied))
+                {
+                    break;
+                }
+
+                Console.WriteLine("Please enter a valid date.");
+            }
+
+            app.DateApplied = dateApplied;
 
             Console.Write("Job Status: ");
             app.JobStatus = Console.ReadLine();
@@ -99,15 +113,15 @@ namespace ApplicationTracker
 
             DisplayApplications();
 
-            Console.WriteLine("Please select application to update: ");
+            Console.Write("Please select application to update: ");
             string num = Console.ReadLine();
-            int appNum = int.Parse(num);
-
-            if (appNum <  1 || appNum > applications.Count)
+            
+            if (!int.TryParse(num, out int appNum) || appNum < 1 || appNum > applications.Count)
             {
                 Console.WriteLine("Invalid application number.");
                 return;
             }
+
             JobApplication app = applications[appNum - 1];
 
             Console.WriteLine("What would you like to edit?");
@@ -117,14 +131,14 @@ namespace ApplicationTracker
             Console.WriteLine("4. Date Applied");
             Console.WriteLine("5. Status");
             Console.WriteLine("6. Notes");
-            Console.WriteLine("Choose an option: ");
+            Console.Write("Choose an option: ");
 
             string option = Console.ReadLine();
 
             switch (option)
             {
                 case "1":
-                    Console.WriteLine("Enter new company name:");
+                    Console.Write("Enter new company name:");
                     string newCompanyName = Console.ReadLine();
 
                     repository.EditCompanyName(app.Id, newCompanyName);
@@ -132,7 +146,7 @@ namespace ApplicationTracker
                     Console.WriteLine("Application company name updated succesfully.");
                     break;
                 case "2":
-                    Console.WriteLine("Enter new job title: ");
+                    Console.Write("Enter new job title: ");
                     string newJobTitle = Console.ReadLine();
 
                     repository.EditJobTitle(app.Id, newJobTitle);
@@ -140,7 +154,7 @@ namespace ApplicationTracker
                     Console.WriteLine("Application job title updated successfully.");
                     break;
                 case "3":
-                    Console.WriteLine("Enter new job location: ");
+                    Console.Write("Enter new job location: ");
                     string newLocation = Console.ReadLine();
 
                     repository.EditJobLocation(app.Id, newLocation);
@@ -148,16 +162,28 @@ namespace ApplicationTracker
                     Console.WriteLine("Application job location updated successfully.");
                     break;
                 case "4":
-                    Console.WriteLine("Enter new date applied (yyyy-mm-dd): ");
-                    string input = Console.ReadLine();
-                    DateTime newDate = DateTime.Parse(input);
+                    DateTime newDate;
+
+                    while (true)
+                    {
+
+                        Console.Write("Enter new date applied (yyyy-mm-dd): ");
+                        string input = Console.ReadLine();
+
+                        if (DateTime.TryParse(input, out newDate))
+                        {
+                            break;
+                        }
+
+                        Console.WriteLine("Please enter a valid date.");
+                    }
 
                     repository.EditDateApplied(app.Id, newDate);
 
                     Console.WriteLine("Application date applied updated successfully.");
                     break;
                 case "5":
-                    Console.WriteLine("Enter new status: ");
+                    Console.Write("Enter new status: ");
                     string newStatus = Console.ReadLine();
 
                     repository.EditApplicationStatus(app.Id, newStatus);
@@ -165,7 +191,7 @@ namespace ApplicationTracker
                     Console.WriteLine("Application status updated successfully.");
                     break;
                 case "6":
-                    Console.WriteLine("Enter new job notes: ");
+                    Console.Write("Enter new job notes: ");
                     string newJobNote = Console.ReadLine();
 
                     repository.EditJobNotes(app.Id, newJobNote);
@@ -187,11 +213,12 @@ namespace ApplicationTracker
 
             DisplayApplications();
 
-            Console.WriteLine("Please select application to delete: ");
+            Console.Write("Please select application to delete: ");
+            Console.WriteLine();
             string num = Console.ReadLine();
-            int appNum = int.Parse(num);
+            
 
-            if (appNum < 1 || appNum > applications.Count)
+            if (!int.TryParse(num, out int appNum) || appNum < 1 || appNum > applications.Count)
             {
                 Console.WriteLine("Invalid application number.");
                 return;
