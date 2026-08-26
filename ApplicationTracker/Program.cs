@@ -25,7 +25,8 @@ namespace ApplicationTracker
                 Console.WriteLine("2. View Applications");
                 Console.WriteLine("3. Edit Application");
                 Console.WriteLine("4. Delete Application");
-                Console.WriteLine("5. Exit");
+                Console.WriteLine("5. Filter by Application Status");
+                Console.WriteLine("6. Exit");
                 Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
@@ -45,6 +46,9 @@ namespace ApplicationTracker
                         DeleteApplication();
                         break;
                     case "5":
+                        FilterApplicationByStatus();
+                        break;
+                    case "6":
                         running = false;
                         break;
                     default:
@@ -107,7 +111,7 @@ namespace ApplicationTracker
                 return;
             }
 
-            DisplayApplications();
+            DisplayApplications(applications);
         }
 
         // Allows the user to select an application and edit a selected field.
@@ -118,7 +122,7 @@ namespace ApplicationTracker
                 return;
             }
 
-            DisplayApplications();
+            DisplayApplications(applications);
 
             Console.Write("Please select application to update: ");
             string num = Console.ReadLine();
@@ -152,7 +156,7 @@ namespace ApplicationTracker
 
                     repository.EditCompanyName(app.Id, newCompanyName);
 
-                    Console.WriteLine("Application company name updated succesfully.");
+                    Console.WriteLine("Application company name updated successfully.");
                     break;
 
                 case "2":
@@ -227,7 +231,7 @@ namespace ApplicationTracker
                 return;
             }
 
-            DisplayApplications();
+            DisplayApplications(applications);
 
             Console.Write("Please select application to delete: ");
             Console.WriteLine();
@@ -247,11 +251,11 @@ namespace ApplicationTracker
         }
 
         // Prints all currently loaded applications in an easy-to-read format
-        static void DisplayApplications()
+        static void DisplayApplications(List<JobApplication> applicationsToDisplay)
         {
-            for (int i = 0; i < applications.Count; i++)
+            for (int i = 0; i < applicationsToDisplay.Count; i++)
             {
-                JobApplication app = applications[i];
+                JobApplication app = applicationsToDisplay[i];
 
                 Console.WriteLine("\n-----------------------------");
                 Console.WriteLine($"{i + 1})");
@@ -276,6 +280,30 @@ namespace ApplicationTracker
             }
 
             return true;
+        }
+
+        // Filters and displays applications that match the status entered by the user.
+        static void FilterApplicationByStatus()
+        {
+            if (!LoadApplications())
+            {
+                return;
+            }
+
+            Console.Write("Enter status to filter by: ");
+            string status = Console.ReadLine();
+
+            List<JobApplication> filteredApplications = applications
+                .Where(app => app.JobStatus.Equals(status, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (filteredApplications.Count == 0 )
+            {
+                Console.WriteLine("No applications found with this status.");
+                return;
+            }
+
+            DisplayApplications( filteredApplications );
         }
     }
 }
