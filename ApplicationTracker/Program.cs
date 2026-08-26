@@ -90,8 +90,7 @@ namespace ApplicationTracker
 
             app.DateApplied = dateApplied;
 
-            Console.Write("Job Status: ");
-            app.JobStatus = Console.ReadLine();
+            app.JobStatus = ChooseStatus("Choose application status: ");
 
             Console.Write("Notes: ");
             app.Notes = Console.ReadLine();
@@ -199,9 +198,8 @@ namespace ApplicationTracker
                     Console.WriteLine("Application date applied updated successfully.");
                     break;
 
-                case "5":
-                    Console.Write("Enter new status: ");
-                    string newStatus = Console.ReadLine();
+                case "5":             
+                    string newStatus = ChooseStatus("Choose new application status: ");
 
                     repository.EditApplicationStatus(app.Id, newStatus);
 
@@ -290,8 +288,7 @@ namespace ApplicationTracker
                 return;
             }
 
-            Console.Write("Enter status to filter by: ");
-            string status = Console.ReadLine();
+            string status = ChooseStatus("Choose status to filter by: ");
 
             List<JobApplication> filteredApplications = applications
                 .Where(app => app.JobStatus.Equals(status, StringComparison.OrdinalIgnoreCase))
@@ -304,6 +301,36 @@ namespace ApplicationTracker
             }
 
             DisplayApplications( filteredApplications );
+        }
+
+        static string ChooseStatus(string prompt)
+        {
+            while (true)
+            {
+                Console.WriteLine(prompt);
+                Console.WriteLine("1. Applied");
+                Console.WriteLine("2. Interviewing");
+                Console.WriteLine("3. Offer");
+                Console.WriteLine("4. Rejected");
+                Console.Write("Choose an option: ");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        return "Applied";
+                    case "2":
+                        return "Interviewing";
+                    case "3":
+                        return "Offer";
+                    case "4":
+                        return "Rejected";
+                    default:
+                        Console.WriteLine("Invalid status choice. Please try again.");
+                        break;
+                }
+            }
         }
     }
 }
