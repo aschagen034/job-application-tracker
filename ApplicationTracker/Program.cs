@@ -1,4 +1,5 @@
-﻿
+﻿using System.Linq;
+
 namespace ApplicationTracker
 {
     internal class Program
@@ -26,7 +27,8 @@ namespace ApplicationTracker
                 Console.WriteLine("3. Edit Application");
                 Console.WriteLine("4. Delete Application");
                 Console.WriteLine("5. Filter by Application Status");
-                Console.WriteLine("6. Exit");
+                Console.WriteLine("6. Sort by Date Applied");
+                Console.WriteLine("7. Exit");
                 Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
@@ -49,6 +51,9 @@ namespace ApplicationTracker
                         FilterApplicationByStatus();
                         break;
                     case "6":
+                        SortApplicationsByDate();
+                        break;
+                    case "7":
                         running = false;
                         break;
                     default:
@@ -331,6 +336,37 @@ namespace ApplicationTracker
                         break;
                 }
             }
+        }
+
+        static void SortApplicationsByDate()
+        {
+            if (!LoadApplications())
+            {
+                return;
+            }
+
+            Console.WriteLine("1. Newest first");
+            Console.WriteLine("2. Oldest first");
+            Console.Write("Choose an option: ");
+
+            string choice = Console.ReadLine();
+
+            List<JobApplication> sortedApplications;
+
+            switch (choice)
+            {
+                case "1":
+                    sortedApplications = applications.OrderByDescending(app => app.DateApplied).ToList();
+                    break;
+                case "2":
+                    sortedApplications = applications.OrderBy(app => app.DateApplied).ToList();
+                    break;
+                default:
+                    Console.WriteLine("Invalid sort option.");
+                    return;
+            }
+
+            DisplayApplications(sortedApplications);
         }
     }
 }
