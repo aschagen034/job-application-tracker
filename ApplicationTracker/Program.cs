@@ -242,20 +242,34 @@ namespace ApplicationTracker
             DisplayApplications(applications);
 
             Console.Write("Please select application to delete: ");
-            Console.WriteLine();
             string num = Console.ReadLine();
-            
+
             // Validate that the selected number exists in the displayed list.
             if (!int.TryParse(num, out int appNum) || appNum < 1 || appNum > applications.Count)
             {
                 Console.WriteLine("Invalid application number.");
                 return;
             }
-            JobApplication app = applications[appNum - 1];
-            // Delete application from the database.
-            repository.DeleteApplication(app.Id);
 
-            Console.WriteLine("Application successfully removed.");
+            JobApplication app = applications[appNum - 1];
+
+            Console.Write($"Are you sure you want to delete {app.CompanyName} - {app.JobTitle}? (yes/no): ");
+            string choice = Console.ReadLine();
+
+            if (choice.Equals("yes", StringComparison.OrdinalIgnoreCase) ||
+            choice.Equals("y", StringComparison.OrdinalIgnoreCase))
+            {
+                // Delete application from the database.
+                repository.DeleteApplication(app.Id);
+
+                Console.WriteLine("Application successfully removed.");
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Delete cancelled.");
+            }
+
         }
 
         // Prints all currently loaded applications in an easy-to-read format
