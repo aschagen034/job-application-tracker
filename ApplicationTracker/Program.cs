@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.IO;
 
 namespace ApplicationTracker
 {
@@ -28,7 +29,8 @@ namespace ApplicationTracker
                 Console.WriteLine("4. Delete Application");
                 Console.WriteLine("5. Filter by Application Status");
                 Console.WriteLine("6. Sort by Date Applied");
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("7. Export Applications to CSV");
+                Console.WriteLine("8. Exit");
                 Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
@@ -54,6 +56,9 @@ namespace ApplicationTracker
                         SortApplicationsByDate();
                         break;
                     case "7":
+                        ExportApplicationsToCsv();
+                        break;
+                    case "8":
                         running = false;
                         break;
                     default:
@@ -308,6 +313,7 @@ namespace ApplicationTracker
             DisplayApplications( filteredApplications );
         }
 
+        // Displays a list of valid job status options and returns the selected status.
         static string ChooseStatus(string prompt)
         {
             while (true)
@@ -338,6 +344,7 @@ namespace ApplicationTracker
             }
         }
 
+        // Loads applications from the database and displays them sorted by date applied
         static void SortApplicationsByDate()
         {
             if (!LoadApplications())
@@ -367,6 +374,48 @@ namespace ApplicationTracker
             }
 
             DisplayApplications(sortedApplications);
+        }
+
+        // Exports all saved applications to a CSV file that can be opened in Excel.
+        static void ExportApplicationsToCsv()
+        {
+            if (!LoadApplications())
+            {
+                return;
+            }
+
+            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "applications.csv");
+
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine("Company Name,Job Title,Job Location,Date Applied,Job Status,Notes");
+
+                foreach (JobApplication app in applications)
+                {
+                    writer.WriteLine(
+                        $"{FormatCsvValue(app.CompanyName)}," +
+                        $"{FormatCsvValue(app.JobTitle)}," +
+                        $"{FormatCsvValue(app.JobLocation)}," +
+                        $"{app.DateApplied.ToShortDateString()}," +
+                        $"{FormatCsvValue(app.JobStatus)}," +
+                        $"{FormatCsvValue(app.Notes)}"
+                    );
+                }
+            }
+
+            Console.WriteLine($"Applications exported successfully to {filePath}");
+        }
+
+        // Formats a value so it can be safely written to a CSV file.
+        static string FormatCsvValue(string value)
+        {
+            if (value.Contains(",") || value.Contains("\"") || value.Contains("\n"))
+            {
+                value = value.Replace("\"", "\"\"");
+                return $"\"{value}\"";
+            }
+
+            return value;
         }
     }
 }
