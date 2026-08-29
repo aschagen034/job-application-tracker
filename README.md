@@ -10,6 +10,7 @@ A C# console application for tracking job applications. The app allows users to 
 - Delete applications
 - Filter applications by status
 - Sort applications by date applied
+- Export applications to a CSV file that can be opened in Excel
 - Store application data in SQL Server
 - Validate user input for dates, menu options, and application selections
 
@@ -34,3 +35,5 @@ A C# console application for tracking job applications. The app allows users to 
 - Using SQL commands with parameters
 - Organizing code with a repository class
 - Validating user input with TryParse
+- Filtering and sorting data with LINQ
+- Exporting application data to a CSV file
