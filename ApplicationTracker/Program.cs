@@ -31,9 +31,8 @@ namespace ApplicationTracker
                 Console.WriteLine("6. Sort by Date Applied");
                 Console.WriteLine("7. Export Applications to CSV");
                 Console.WriteLine("8. Exit");
-                Console.Write("Choose an option: ");
 
-                string choice = Console.ReadLine();
+                string choice = ReadInput("Choose an option: ");
 
                 switch (choice)
                 {
@@ -74,21 +73,15 @@ namespace ApplicationTracker
         {
             JobApplication app = new JobApplication();
 
-            Console.Write("Company Name: ");
-            app.CompanyName = Console.ReadLine();
-
-            Console.Write("Job Title: ");
-            app.JobTitle = Console.ReadLine();
-
-            Console.Write("Job Location: ");
-            app.JobLocation = Console.ReadLine();
+            app.CompanyName = ReadRequiredInput("Company Name: ");
+            app.JobTitle = ReadRequiredInput("Job Title: ");
+            app.JobLocation = ReadRequiredInput("Job Location: ");
 
             DateTime dateApplied;
 
             while (true)
             {
-                Console.Write("Date Applied (yyyy-mm-dd): ");
-                string dateInput = Console.ReadLine();
+                string dateInput = ReadInput("Date Applied (yyyy-mm-dd): ");
 
                 if (DateTime.TryParse(dateInput, out dateApplied))
                 {
@@ -102,8 +95,7 @@ namespace ApplicationTracker
 
             app.JobStatus = ChooseStatus("Choose application status: ");
 
-            Console.Write("Notes: ");
-            app.Notes = Console.ReadLine();
+            app.Notes = ReadInput("Notes: ");
 
             //Send the completed application to the repository to be inserted into SQL.
             repository.AddApplication(app);
@@ -133,8 +125,7 @@ namespace ApplicationTracker
 
             DisplayApplications(applications);
 
-            Console.Write("Please select application to update: ");
-            string num = Console.ReadLine();
+            string num = ReadInput("Please select application to update: ");
             
             // Checks to see if user enter a valid application number.
             if (!int.TryParse(num, out int appNum) || appNum < 1 || appNum > applications.Count)
@@ -152,16 +143,14 @@ namespace ApplicationTracker
             Console.WriteLine("4. Date Applied");
             Console.WriteLine("5. Status");
             Console.WriteLine("6. Notes");
-            Console.Write("Choose an option: ");
 
-            string option = Console.ReadLine();
+            string option = ReadInput("Choose an option: ");
 
             // Update only the field selected by the user.
             switch (option)
             {
                 case "1":
-                    Console.Write("Enter new company name:");
-                    string newCompanyName = Console.ReadLine();
+                    string newCompanyName = ReadRequiredInput("Enter new company name: ");
 
                     repository.EditCompanyName(app.Id, newCompanyName);
 
@@ -169,8 +158,7 @@ namespace ApplicationTracker
                     break;
 
                 case "2":
-                    Console.Write("Enter new job title: ");
-                    string newJobTitle = Console.ReadLine();
+                    string newJobTitle = ReadRequiredInput("Enter new job title: ");
 
                     repository.EditJobTitle(app.Id, newJobTitle);
 
@@ -178,8 +166,7 @@ namespace ApplicationTracker
                     break;
 
                 case "3":
-                    Console.Write("Enter new job location: ");
-                    string newLocation = Console.ReadLine();
+                    string newLocation = ReadRequiredInput("Enter new job location: ");
 
                     repository.EditJobLocation(app.Id, newLocation);
 
@@ -191,11 +178,9 @@ namespace ApplicationTracker
                     // Loop until user enters a valid date
                     while (true)
                     {
+                        string dateInput = ReadInput("Enter new date applied (yyyy-mm-dd): ");
 
-                        Console.Write("Enter new date applied (yyyy-mm-dd): ");
-                        string input = Console.ReadLine();
-
-                        if (DateTime.TryParse(input, out newDate))
+                        if (DateTime.TryParse(dateInput, out newDate))
                         {
                             break;
                         }
@@ -217,8 +202,7 @@ namespace ApplicationTracker
                     break;
 
                 case "6":
-                    Console.Write("Enter new job notes: ");
-                    string newJobNote = Console.ReadLine();
+                    string newJobNote = ReadInput("Enter new job notes: ");
 
                     repository.EditJobNotes(app.Id, newJobNote);
 
@@ -240,9 +224,8 @@ namespace ApplicationTracker
             }
 
             DisplayApplications(applications);
-
-            Console.Write("Please select application to delete: ");
-            string num = Console.ReadLine();
+          
+            string num = ReadInput("Please select application to delete: ");
 
             // Validate that the selected number exists in the displayed list.
             if (!int.TryParse(num, out int appNum) || appNum < 1 || appNum > applications.Count)
@@ -253,8 +236,7 @@ namespace ApplicationTracker
 
             JobApplication app = applications[appNum - 1];
 
-            Console.Write($"Are you sure you want to delete {app.CompanyName} - {app.JobTitle}? (yes/no): ");
-            string choice = Console.ReadLine();
+            string choice = ReadInput($"Are you sure you want to delete {app.CompanyName} - {app.JobTitle}? (yes/no): ");
 
             if (choice.Equals("yes", StringComparison.OrdinalIgnoreCase) ||
             choice.Equals("y", StringComparison.OrdinalIgnoreCase))
@@ -336,10 +318,9 @@ namespace ApplicationTracker
                 Console.WriteLine("1. Applied");
                 Console.WriteLine("2. Interviewing");
                 Console.WriteLine("3. Offer");
-                Console.WriteLine("4. Rejected");
-                Console.Write("Choose an option: ");
+                Console.WriteLine("4. Rejected");              
 
-                string choice = Console.ReadLine();
+                string choice = ReadInput("Choose an option: ");
 
                 switch (choice)
                 {
@@ -368,9 +349,8 @@ namespace ApplicationTracker
 
             Console.WriteLine("1. Newest first");
             Console.WriteLine("2. Oldest first");
-            Console.Write("Choose an option: ");
 
-            string choice = Console.ReadLine();
+            string choice = ReadInput("Choose an option: ");
 
             List<JobApplication> sortedApplications;
 
@@ -430,6 +410,34 @@ namespace ApplicationTracker
             }
 
             return value;
+        }
+
+        // Prompts the user until a non-empty value is entered.
+        // Throws an exception if console input is closed.
+        static string ReadRequiredInput(string prompt)
+        {
+            while (true)
+            {
+                string input = ReadInput(prompt).Trim();
+
+                if (input.Length > 0)
+                {
+                    return input;
+                }
+
+                Console.WriteLine("This field is required.");
+            }
+        }
+
+
+        // Displays a prompt and reads one line of console input.
+        // Throws and exception if the input stream is closed.
+        static string ReadInput(string prompt)
+        {
+            Console.Write(prompt);
+
+            return Console.ReadLine()
+                ?? throw new EndOfStreamException("Console input was closed.");
         }
     }
 }
