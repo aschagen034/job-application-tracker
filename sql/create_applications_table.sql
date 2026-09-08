@@ -1,0 +1,11 @@
+USE JobTracker;
+
+CREATE TABLE Applications (
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	CompanyName NVARCHAR(100) NOT NULL,
+	JobTitle NVARCHAR(100) NOT NULL,
+	JobLocation NVARCHAR(100) NOT NULL,
+	DateApplied DATE NOT NULL,
+	JobStatus NVARCHAR(50) NOT NULL,
+	Notes NVARCHAR(255)
+);
