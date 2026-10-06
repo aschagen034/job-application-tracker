@@ -33,7 +33,7 @@ Choose an option:
 ## Technologies Used
 
 - C#
-- .NET
+- .NET 8
 - SQL Server Express
 - Microsoft.Data.SqlClient
 - Git and GitHub
@@ -51,11 +51,10 @@ Before running the project, install:
 ### 1. Clone the repository
 
 ```powershell
-git clone <repository-url>
-cd JobTracker
+git clone https://github.com/aschagen034/job-application-tracker.git
+cd job-application-tracker
 ```
 
-Replace `<repository-url>` with the URL of this repository.
 
 ### 2. Create the database
 
@@ -86,7 +85,7 @@ sql/add_application_one.sql
 Open:
 
 ```text
-ApplicationTracker/ApplicationTracker/Program.cs
+ApplicationTracker/Program.cs
 ```
 
 Update the connection string so that the `Server` value matches your SQL Server instance:
@@ -110,19 +109,19 @@ static string connectionString =
 From the repository root, run:
 
 ```powershell
-dotnet restore ApplicationTracker/ApplicationTracker.sln
+dotnet restore ApplicationTracker.sln
 ```
 
 ### 6. Build the project
 
 ```powershell
-dotnet build ApplicationTracker/ApplicationTracker.sln
+dotnet build ApplicationTracker.sln
 ```
 
 ### 7. Run the application
 
 ```powershell
-dotnet run --project ApplicationTracker/ApplicationTracker/ApplicationTracker.csproj
+dotnet run --project ApplicationTracker/ApplicationTracker.csproj
 ```
 
 ## Application Statuses
@@ -166,18 +165,18 @@ The `Applications` table contains the following columns:
 ## Project Structure
 
 ```text
-JobTracker/
+job-application-tracker/
 ├── ApplicationTracker/
-│   ├── ApplicationTracker/
-│   │   ├── ApplicationRepository.cs
-│   │   ├── ApplicationTracker.csproj
-│   │   ├── JobApplication.cs
-│   │   └── Program.cs
-│   ├── ApplicationTracker.sln
-│   └── README.md
-└── sql/
-    ├── add_application_one.sql
-    └── create_applications_table.sql
+│   ├── ApplicationRepository.cs
+│   ├── ApplicationTracker.csproj
+│   ├── JobApplication.cs
+│   └── Program.cs
+├── sql/
+│   ├── add_application_one.sql
+│   └── create_applications_table.sql
+├── .gitignore
+├── ApplicationTracker.sln
+└── README.md
 ```
 
 - `Program.cs` handles the console menu, user input, validation, filtering, sorting, and display logic.
@@ -186,16 +185,3 @@ JobTracker/
 - `create_applications_table.sql` creates the required database table.
 - `add_application_one.sql` inserts an optional sample record.
 
-## What I Learned
-
-While building this project, I practiced:
-
-- Creating a console-based CRUD application in C#
-- Connecting a .NET application to SQL Server
-- Executing parameterized SQL commands
-- Organizing database operations with a repository class
-- Validating console input
-- Filtering and sorting collections with LINQ
-- Handling nullable input and database values
-- Exporting application data to CSV
-- Organizing and documenting a C# project with Git and GitHub
